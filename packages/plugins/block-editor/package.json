@@ -1,0 +1,12 @@
+{
+  "name": "@rougsig/twx-block-editor",
+  "version": "0.0.0",
+  "devDependencies": {
+    "@repo/tsconfig": "workspace:*"
+  },
+  "scripts": {
+    "build": "tsup",
+    "check-types": "tsc --noEmit",
+    "dev": "tsup --watch"
+  }
+}

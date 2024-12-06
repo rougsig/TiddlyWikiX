@@ -1,0 +1,14 @@
+{
+  "name": "@rougsig/twx-app",
+  "private": true,
+  "dependencies": {
+    "tiddlywiki": "^5.3.6",
+    "@rougsig/twx-block-editor": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/tsconfig": "workspace:*"
+  },
+  "scripts": {
+    "dev": "sh ./scripts/dev.sh"
+  }
+}

@@ -1,0 +1,3 @@
+list: $:/plugins/rougsig/twx-block-editor $:/plugins/rougsig/twx-block-editor/bundle
+title: $:/StoryList
+type: text/vnd.tiddlywiki

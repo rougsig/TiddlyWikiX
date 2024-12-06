@@ -1,0 +1,5 @@
+packages:
+  - "instances/*"
+  - "packages/*"
+  - "packages/plugins/*"
+  - "packages/themes/*"
