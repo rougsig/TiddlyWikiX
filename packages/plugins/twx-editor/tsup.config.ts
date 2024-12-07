@@ -37,6 +37,6 @@ export default defineConfig(() => ({
   // Does not work with IIFE, so looks like we do not need IIFE, CJS works fine
   // https://github.com/egoist/tsup/blob/main/src/esbuild/index.ts#L134
   external: [
-    /^\$:\/.*\.js$/,
+    /^\$:\/.*$/,
   ],
 }))
