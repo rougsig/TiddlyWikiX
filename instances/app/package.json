@@ -3,7 +3,7 @@
   "private": true,
   "dependencies": {
     "tiddlywiki": "^5.3.6",
-    "@rougsig/twx-block-editor": "workspace:*"
+    "@rougsig/twx-editor": "workspace:*"
   },
   "devDependencies": {
     "@repo/tsconfig": "workspace:*"

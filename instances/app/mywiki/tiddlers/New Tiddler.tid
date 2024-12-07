@@ -6,4 +6,4 @@ type: text/vnd.tiddlywiki
 
 [[Rougsig's Website|https://rougsig.com]]
 
-{{{$:/plugins/rougsig/twx-block-editor/bundle}}}
+{{{$:/plugins/rougsig/twx-editor/bundle}}}

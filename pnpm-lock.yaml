@@ -32,9 +32,9 @@ importers:
 
   instances/app:
     dependencies:
-      '@rougsig/twx-block-editor':
+      '@rougsig/twx-editor':
         specifier: workspace:*
-        version: link:../../packages/plugins/block-editor
+        version: link:../../packages/plugins/twx-editor
       tiddlywiki:
         specifier: ^5.3.6
         version: 5.3.6
@@ -43,7 +43,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/tsconfig
 
-  packages/plugins/block-editor:
+  packages/plugins/twx-editor:
     devDependencies:
       '@repo/tsconfig':
         specifier: workspace:*

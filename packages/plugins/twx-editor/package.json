@@ -1,5 +1,5 @@
 {
-  "name": "@rougsig/twx-block-editor",
+  "name": "@rougsig/twx-editor",
   "version": "0.0.0",
   "devDependencies": {
     "@repo/tsconfig": "workspace:*"

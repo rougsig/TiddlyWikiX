@@ -1,5 +1,5 @@
 {
-  "title": "$:/plugins/rougsig/twx-block-editor",
+  "title": "$:/plugins/rougsig/twx-editor",
   "name": "TiddleWikiX Block Editor",
   "description": "A block editor for TiddleWikiX based on Editor.js",
   "list": "readme",
