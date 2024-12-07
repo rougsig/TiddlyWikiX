@@ -5,14 +5,39 @@ import {defineConfig} from 'tsup'
 
 export default defineConfig(() => ({
   entry: {
-    lib: 'src/lib.ts',
+    bundle: 'src/bundle.ts',
     widget: 'src/widget.ts',
   },
   clean: true,
   minify: false,
-  format: 'iife',
+  shims: false,
+  format: 'cjs',
+  platform: 'browser',
   sourcemap: 'inline',
   onSuccess: 'cp readme.tid plugin.info dist/',
+  // esbuildPlugins: [
+  //   {
+  //     name: 'tiddywiki-external',
+  //     setup(build) {
+  //       const noExternal = []
+  //       const external = [
+  //         /^\$:\/.*\.js$/
+  //       ]
+  //
+  //       build.onResolve({ filter: /.*/ }, (args) => {
+  //         // Respect explicit external/noExternal conditions
+  //         if (match(args.path, noExternal)) {
+  //           return
+  //         }
+  //         if (match(args.path, external)) {
+  //           return { external: true }
+  //         }
+  //       })
+  //     },
+  //   },
+  // ],
+  // esbuildOptions: (options, context) => {
+  // },
   plugins: [
     {
       name: 'tiddlywiki-metadata',
@@ -31,5 +56,10 @@ export default defineConfig(() => ({
         }
       },
     },
+  ],
+  // Does not work with IIFE, so looks like we do not need IIFE, CJS works fine
+  // https://github.com/egoist/tsup/blob/main/src/esbuild/index.ts#L134
+  external: [
+    /^\$:\/.*\.js$/,
   ],
 }))

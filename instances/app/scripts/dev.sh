@@ -6,7 +6,7 @@ pnpm nodemon \
   &
 P1=$!
 pnpm browser-sync start \
-  --files mywiki/plugins/**/* \
+  --files node_modules/@rougsig/**/* \
   --proxy http://localhost:4801 \
   --port 4800 \
   &
