@@ -15,29 +15,6 @@ export default defineConfig(() => ({
   platform: 'browser',
   sourcemap: 'inline',
   onSuccess: 'cp readme.tid plugin.info dist/',
-  // esbuildPlugins: [
-  //   {
-  //     name: 'tiddywiki-external',
-  //     setup(build) {
-  //       const noExternal = []
-  //       const external = [
-  //         /^\$:\/.*\.js$/
-  //       ]
-  //
-  //       build.onResolve({ filter: /.*/ }, (args) => {
-  //         // Respect explicit external/noExternal conditions
-  //         if (match(args.path, noExternal)) {
-  //           return
-  //         }
-  //         if (match(args.path, external)) {
-  //           return { external: true }
-  //         }
-  //       })
-  //     },
-  //   },
-  // ],
-  // esbuildOptions: (options, context) => {
-  // },
   plugins: [
     {
       name: 'tiddlywiki-metadata',
