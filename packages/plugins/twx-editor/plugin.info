@@ -1,7 +1,7 @@
 {
   "title": "$:/plugins/rougsig/twx-editor",
-  "name": "TiddleWikiX Block Editor",
-  "description": "A block editor for TiddleWikiX based on Editor.js",
+  "name": "TiddleWikiX Editor",
+  "description": "A editor for TiddleWikiX based on CodeMirror6",
   "list": "readme",
   "stability": "STABILITY_1_EXPERIMENTAL"
 }

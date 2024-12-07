@@ -4,7 +4,9 @@ import {basicSetup, EditorView} from 'codemirror'
 
 export const createEditor = (parent: Element) => {
   return new EditorView({
-    extensions: [basicSetup],
+    extensions: [
+      basicSetup,
+    ],
     parent: parent,
   })
 }
