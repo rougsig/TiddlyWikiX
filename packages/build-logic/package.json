@@ -1,0 +1,21 @@
+{
+  "name": "@repo/build-logic",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts",
+      "source": "./src/index.ts"
+    }
+  },
+  "files": [
+    "dist/**",
+    "src/**"
+  ],
+  "devDependencies": {
+    "@repo/tsconfig": "workspace:*"
+  }
+}

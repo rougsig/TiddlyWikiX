@@ -1,3 +1,12 @@
+// This is a catch-all tsconfig.json to be used by files that are not explicitly included
+// by any of the tsconfig.json files in the packages.
+//
+// It is intended to be used by IDEs and other tools that walk the directory tree to find
+// a tsconfig.json file.
 {
-  "$schema": "https://json.schemastore.org/tsconfig.json"
+  "$schema": "https://json.schemastore.org/tsconfig.json",
+  "compilerOptions": {
+    "module": "es2022",
+    "moduleResolution": "bundler"
+  }
 }
