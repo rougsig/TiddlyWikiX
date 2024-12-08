@@ -17,7 +17,8 @@
   ],
   "devDependencies": {
     "@repo/build-logic": "workspace:*",
-    "@repo/tsconfig": "workspace:*"
+    "@repo/tsconfig": "workspace:*",
+    "jsdom": "^25.0.1"
   },
   "peerDependencies": {
     "@codemirror/language": "^6.10.6",

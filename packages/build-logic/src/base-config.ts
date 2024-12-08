@@ -2,6 +2,7 @@ import {resolve} from 'node:path'
 import rollupNodeExternalsPlugin from 'rollup-plugin-node-externals'
 import {BuildOptions, defineConfig, LibraryOptions, mergeConfig} from 'vite'
 import viteDtsPlugin from 'vite-plugin-dts'
+import tsconfigPathsPlugin from 'vite-tsconfig-paths'
 import {defineConfig as defineVitestConfig} from 'vitest/config'
 
 export type CreateConfigArgs = {
@@ -23,11 +24,17 @@ export const createConfig = (args: CreateConfigArgs) => {
         },
         rollupOptions: {
           plugins: [
-            rollupNodeExternalsPlugin(),
+            rollupNodeExternalsPlugin({
+              include: [
+                /rollup.*/,
+                /vite.*/,
+              ]
+            }),
           ],
         },
       },
       plugins: [
+        tsconfigPathsPlugin(),
         viteDtsPlugin({
             exclude: [resolve(dirname, 'src', '__tests__', '**')],
             entryRoot: resolve(dirname, 'src'),
@@ -39,6 +46,7 @@ export const createConfig = (args: CreateConfigArgs) => {
       test: {
         watch: false,
         include: [resolve(dirname, 'src', '__tests__', '**', '*.test.ts?(x)')],
+        environment: 'jsdom', // Temporary extract to config
         sequence: {
           hooks: 'stack',
         },

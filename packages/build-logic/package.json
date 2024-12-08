@@ -16,6 +16,9 @@
     "src/**"
   ],
   "devDependencies": {
-    "@repo/tsconfig": "workspace:*"
+    "@repo/tsconfig": "workspace:*",
+    "rollup-plugin-node-externals": "^7.1.3",
+    "vite-plugin-dts": "^4.3.0",
+    "vite-tsconfig-paths": "^5.1.4"
   }
 }
