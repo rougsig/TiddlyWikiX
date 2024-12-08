@@ -1,5 +1,0 @@
-https://github.com/codemirror/lang-javascript/blob/main/src/javascript.ts
-https://github.com/lezer-parser/markdown/tree/main/src
-https://codemirror.net/examples/lang-package/
-https://github.com/codemirror/lang-example
-https://github.com/lezer-parser/markdown/tree/main/src

@@ -1,7 +1,8 @@
 import {resolve} from 'node:path'
 import rollupNodeExternalsPlugin from 'rollup-plugin-node-externals'
-import {BuildOptions, defineConfig, LibraryOptions} from 'vite'
+import {BuildOptions, defineConfig, LibraryOptions, mergeConfig} from 'vite'
 import viteDtsPlugin from 'vite-plugin-dts'
+import {defineConfig as defineVitestConfig} from 'vitest/config'
 
 export type CreateConfigArgs = {
   build:
@@ -12,25 +13,36 @@ export type CreateConfigArgs = {
 export const createConfig = (args: CreateConfigArgs) => {
   const dirname = process.cwd()
 
-  return defineConfig({
-    build: {
-      minify: args.build.minify,
-      lib: {
-        entry: args.build.entry,
-        formats: args.build.formats,
-      },
-      rollupOptions: {
-        plugins: [
-          rollupNodeExternalsPlugin(),
-        ],
-      },
-    },
-    plugins: [
-      viteDtsPlugin({
-          exclude: [resolve(dirname, 'src', '__tests__', '**')],
-          entryRoot: resolve(dirname, 'src'),
+  return mergeConfig(
+    defineConfig({
+      build: {
+        minify: args.build.minify,
+        lib: {
+          entry: args.build.entry,
+          formats: args.build.formats,
         },
-      ),
-    ],
-  })
+        rollupOptions: {
+          plugins: [
+            rollupNodeExternalsPlugin(),
+          ],
+        },
+      },
+      plugins: [
+        viteDtsPlugin({
+            exclude: [resolve(dirname, 'src', '__tests__', '**')],
+            entryRoot: resolve(dirname, 'src'),
+          },
+        ),
+      ],
+    }),
+    defineVitestConfig({
+      test: {
+        watch: false,
+        include: [resolve(dirname, 'src', '__tests__', '**', '*.test.ts?(x)')],
+        sequence: {
+          hooks: 'stack',
+        },
+      },
+    }),
+  )
 }
