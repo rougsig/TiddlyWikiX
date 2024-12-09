@@ -9,7 +9,8 @@ import {beforeAll, describe, expect, test} from 'vitest'
 //
 // Checklist of things to snapshot:
 // [+] Block Quotes
-// [ ] Code Blocks
+// [+] Code Blocks
+// [ ] Inline Code Blocks
 // [ ] Conditional Shortcut Syntax
 // [ ] Dashes
 // [ ] Definitions
@@ -332,6 +333,129 @@ describe('testing tiddlywiki parser', () => {
           ]
         `)
       })
+    })
+  })
+
+  describe('Code Blocks', () => {
+    test('simple', () => {
+      const script = `
+      |\`\`\`
+      |My perfect code
+      |\`\`\`
+      `.trimMargin()
+
+      expect(parser.parse(script)).toMatchInlineSnapshot(`
+        [
+          {
+            "attributes": {
+              "code": {
+                "end": 23,
+                "start": 4,
+                "type": "string",
+                "value": "My perfect code",
+              },
+              "language": {
+                "end": 3,
+                "start": 3,
+                "type": "string",
+                "value": "",
+              },
+            },
+            "end": 23,
+            "rule": "codeblock",
+            "start": 0,
+            "type": "codeblock",
+          },
+        ]
+      `)
+    })
+
+    // Looks like unsupported for now
+    // https://github.com/TiddlyWiki/TiddlyWiki5/issues/8811
+    test('with css class', () => {
+      const script = `
+      |\`\`\`.css-class
+      |My perfect code
+      |\`\`\`
+      `.trimMargin()
+
+      expect(parser.parse(script)).toMatchInlineSnapshot(`
+        [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "end": 32,
+                    "start": 2,
+                    "text": "\`.css-class
+        My perfect code
+        ",
+                    "type": "text",
+                  },
+                ],
+                "end": 32,
+                "rule": "codeinline",
+                "start": 0,
+                "tag": "code",
+                "type": "element",
+              },
+              {
+                "children": [
+                  {
+                    "end": 33,
+                    "start": 33,
+                    "text": "",
+                    "type": "text",
+                  },
+                ],
+                "end": 33,
+                "rule": "codeinline",
+                "start": 32,
+                "tag": "code",
+                "type": "element",
+              },
+            ],
+            "end": 33,
+            "start": 0,
+            "tag": "p",
+            "type": "element",
+          },
+        ]
+      `)
+    })
+
+    test('with language', () => {
+      const script = `
+      |\`\`\`javascript
+      |My perfect code
+      |\`\`\`
+      `.trimMargin()
+
+      expect(parser.parse(script)).toMatchInlineSnapshot(`
+        [
+          {
+            "attributes": {
+              "code": {
+                "end": 33,
+                "start": 14,
+                "type": "string",
+                "value": "My perfect code",
+              },
+              "language": {
+                "end": 13,
+                "start": 3,
+                "type": "string",
+                "value": "javascript",
+              },
+            },
+            "end": 33,
+            "rule": "codeblock",
+            "start": 0,
+            "type": "codeblock",
+          },
+        ]
+      `)
     })
   })
 
