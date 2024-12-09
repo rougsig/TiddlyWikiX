@@ -10,7 +10,7 @@ import {beforeAll, describe, expect, test} from 'vitest'
 // Checklist of things to snapshot:
 // [+] Block Quotes
 // [+] Code Blocks
-// [ ] Inline Code Blocks
+//     [+] Inline Code Blocks
 // [ ] Conditional Shortcut Syntax
 // [ ] Dashes
 // [ ] Definitions
@@ -379,15 +379,17 @@ describe('testing tiddlywiki parser', () => {
     })
   })
 
+  // https://tiddlywiki.com/static/Code%2520Blocks%2520in%2520WikiText.html
   describe('Code Blocks', () => {
-    test('simple', () => {
-      const script = `
+    describe('multi-line', () => {
+      test('simple', () => {
+        const script = `
       |\`\`\`
       |My perfect code
       |\`\`\`
       `.trimMargin()
 
-      expect(parser.parse(script)).toMatchInlineSnapshot(`
+        expect(parser.parse(script)).toMatchInlineSnapshot(`
         [
           {
             "attributes": {
@@ -411,18 +413,18 @@ describe('testing tiddlywiki parser', () => {
           },
         ]
       `)
-    })
+      })
 
-    // Looks like unsupported for now
-    // https://github.com/TiddlyWiki/TiddlyWiki5/issues/8811
-    test('with css class', () => {
-      const script = `
+      // Looks like unsupported for now
+      // https://github.com/TiddlyWiki/TiddlyWiki5/issues/8811
+      test('with css class', () => {
+        const script = `
       |\`\`\`.css-class
       |My perfect code
       |\`\`\`
       `.trimMargin()
 
-      expect(parser.parse(script)).toMatchInlineSnapshot(`
+        expect(parser.parse(script)).toMatchInlineSnapshot(`
         [
           {
             "children": [
@@ -466,16 +468,16 @@ describe('testing tiddlywiki parser', () => {
           },
         ]
       `)
-    })
+      })
 
-    test('with language', () => {
-      const script = `
+      test('with language', () => {
+        const script = `
       |\`\`\`javascript
       |My perfect code
       |\`\`\`
       `.trimMargin()
 
-      expect(parser.parse(script)).toMatchInlineSnapshot(`
+        expect(parser.parse(script)).toMatchInlineSnapshot(`
         [
           {
             "attributes": {
@@ -499,15 +501,15 @@ describe('testing tiddlywiki parser', () => {
           },
         ]
       `)
-    })
+      })
 
-    test('unclosed', () => {
-      const script = `
+      test('unclosed', () => {
+        const script = `
       |\`\`\`
       |My perfect code
       `.trimMargin()
 
-      expect(parser.parse(script)).toMatchInlineSnapshot(`
+        expect(parser.parse(script)).toMatchInlineSnapshot(`
         [
           {
             "attributes": {
@@ -531,6 +533,69 @@ describe('testing tiddlywiki parser', () => {
           },
         ]
       `)
+      })
+    })
+
+    describe('single-line', () => {
+      test('single quotes', () => {
+        expect(parser.parse('`My perfect code`')).toMatchInlineSnapshot(`
+          [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "end": 17,
+                      "start": 1,
+                      "text": "My perfect code",
+                      "type": "text",
+                    },
+                  ],
+                  "end": 17,
+                  "rule": "codeinline",
+                  "start": 0,
+                  "tag": "code",
+                  "type": "element",
+                },
+              ],
+              "end": 17,
+              "start": 0,
+              "tag": "p",
+              "type": "element",
+            },
+          ]
+        `)
+      })
+
+      test('double quotes', () => {
+        expect(parser.parse('``My perfect code``')).toMatchInlineSnapshot(`
+          [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "end": 19,
+                      "start": 2,
+                      "text": "My perfect code",
+                      "type": "text",
+                    },
+                  ],
+                  "end": 19,
+                  "rule": "codeinline",
+                  "start": 0,
+                  "tag": "code",
+                  "type": "element",
+                },
+              ],
+              "end": 19,
+              "start": 0,
+              "tag": "p",
+              "type": "element",
+            },
+          ]
+        `)
+      })
     })
   })
 
