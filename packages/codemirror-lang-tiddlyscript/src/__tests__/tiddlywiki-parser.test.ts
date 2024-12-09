@@ -229,6 +229,49 @@ describe('testing tiddlywiki parser', () => {
           ]
         `)
       })
+
+      test('unclosed', () => {
+        const script = `
+        |<<<
+        |Text
+        `.trimMargin()
+
+        expect(parser.parse(script)).toMatchInlineSnapshot(`
+          [
+            {
+              "attributes": {
+                "class": {
+                  "end": 3,
+                  "start": 3,
+                  "type": "string",
+                  "value": "tc-quote",
+                },
+              },
+              "children": [
+                {
+                  "children": [
+                    {
+                      "end": 8,
+                      "start": 4,
+                      "text": "Text",
+                      "type": "text",
+                    },
+                  ],
+                  "end": 8,
+                  "start": 4,
+                  "tag": "p",
+                  "type": "element",
+                },
+              ],
+              "end": 8,
+              "rule": "quoteblock",
+              "start": 0,
+              "tag": "blockquote",
+              "type": "element",
+            },
+          ]
+        `)
+      })
     })
 
     describe('single-line', () => {
@@ -450,6 +493,38 @@ describe('testing tiddlywiki parser', () => {
               },
             },
             "end": 33,
+            "rule": "codeblock",
+            "start": 0,
+            "type": "codeblock",
+          },
+        ]
+      `)
+    })
+
+    test('unclosed', () => {
+      const script = `
+      |\`\`\`
+      |My perfect code
+      `.trimMargin()
+
+      expect(parser.parse(script)).toMatchInlineSnapshot(`
+        [
+          {
+            "attributes": {
+              "code": {
+                "end": 19,
+                "start": 4,
+                "type": "string",
+                "value": "My perfect code",
+              },
+              "language": {
+                "end": 3,
+                "start": 3,
+                "type": "string",
+                "value": "",
+              },
+            },
+            "end": 19,
             "rule": "codeblock",
             "start": 0,
             "type": "codeblock",
