@@ -87,6 +87,9 @@ importers:
       codemirror:
         specifier: ^6.0.1
         version: 6.0.1(@lezer/common@1.2.3)
+      tiddlywiki:
+        specifier: ^5.3.6
+        version: 5.3.6
     devDependencies:
       '@repo/build-logic':
         specifier: workspace:*
@@ -94,6 +97,9 @@ importers:
       '@repo/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
+      '@tiddlygit/tiddlywiki-pr-nightly':
+        specifier: 5.3.6-prerelease-20241011-pr-8258-6
+        version: 5.3.6-prerelease-20241011-pr-8258-6
       jsdom:
         specifier: ^25.0.1
         version: 25.0.1
@@ -769,6 +775,12 @@ packages:
 
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
+
+  '@tiddlygit/tiddlywiki-pr-nightly@5.3.6-prerelease-20241011-pr-8258-6':
+    resolution: {integrity: sha512-VKvLdFz7qwQTVGIUe9s5q/qhptbErNW5t4shvIzIb/ljDRw6/J2WBAqQpoSh7/vxrbZHSAMMUXLMr0qpNqYj1g==}
+    engines: {node: '>=0.8.2'}
+    hasBin: true
+    bundledDependencies: []
 
   '@types/argparse@1.0.38':
     resolution: {integrity: sha512-ebDJ9b0e702Yr7pWgB0jzm+CX4Srzz8RcXtLJDJB+BSccqMa36uyH/zUsSYao5+BD1ytv3k3rPYCq4mAE1hsXA==}
@@ -2717,6 +2729,8 @@ snapshots:
       - '@types/node'
 
   '@socket.io/component-emitter@3.1.2': {}
+
+  '@tiddlygit/tiddlywiki-pr-nightly@5.3.6-prerelease-20241011-pr-8258-6': {}
 
   '@types/argparse@1.0.38': {}
 

@@ -1,5 +1,5 @@
 {
-  "name": "@rougsig/codemirror-lang-tiddlywiki",
+  "name": "@rougsig/codemirror-lang-tiddlyscript",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -25,6 +25,7 @@
     "@codemirror/state": "^6.4.1",
     "@codemirror/view": "^6.35.2",
     "@lezer/common": "^1.2.3",
-    "codemirror": "^6.0.1"
+    "codemirror": "^6.0.1",
+    "tiddlywiki": "^5.3.6"
   }
 }

@@ -46,7 +46,7 @@ export const createConfig = (args: CreateConfigArgs) => {
       test: {
         watch: false,
         include: [resolve(dirname, 'src', '__tests__', '**', '*.test.ts?(x)')],
-        environment: 'jsdom', // Temporary extract to config
+        // environment: 'jsdom', // Temporary extract to config
         sequence: {
           hooks: 'stack',
         },
