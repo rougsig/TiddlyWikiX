@@ -4,47 +4,12 @@ import {TiddlyWiki} from 'tiddlywiki'
 import {beforeAll, describe, expect, test} from 'vitest'
 
 //
-// All TiddlyWiki script syntax described here
+// All TiddlyWiki script syntax described here:
 // https://tiddlywiki.com/static/WikiText.html
 //
-// Checklist of things to snapshot:
-// [+] Block Quotes
-// [+] Code Blocks
-//     [+] Inline Code Blocks
-// [ ] Conditional Shortcut Syntax
-// [ ] Dashes
-// [ ] Definitions
-// [ ] Filtered Attribute Values
-// [ ] Formatting
-// [ ] Hard Linebreaks
-// [+] Headings
-// [ ] Horizontal Rules
-// [ ] HTML Entities
-// [ ] HTML
-// [ ] Images
-// [ ] Linking
-// [ ] Lists
-// [ ] Literal Attribute Values
-// [ ] Macro Calls
-// [ ] Macro Definitions
-// [ ] Macro Parameter Handling
-// [ ] Paragraphs
-// [ ] Procedure Calls
-// [ ] Procedure Definitions
-// [ ] Procedure Parameter Handling
-// [ ] Styles and Classes
-// [ ] Substituted Attribute Values
-// [ ] Tables
-// [ ] Transcluded Attribute Values
-// [ ] Transclusion and Substitution
-// [ ] Transclusion
-// [ ] Typed Blocks
-// [ ] Utility Classes
-// [ ] Variable Attribute Values
-// [ ] Variables
-// [ ] Widget Attributes
-// [ ] Widgets
-// [ ] WikiText Parser Modes
+// All TiddlyWiki parse sources here:
+// https://github.com/TiddlyWiki/TiddlyWiki5/blob/master/core/modules/parsers/wikiparser/rules
+//
 describe('testing tiddlywiki parser', () => {
   let parser: TiddlyWikiParser
 
@@ -62,8 +27,466 @@ describe('testing tiddlywiki parser', () => {
     expect($tw).toBeDefined()
   })
 
-  // https://tiddlywiki.com/static/Block%2520Quotes%2520in%2520WikiText.html
-  describe('Block Quotes', () => {
+  describe('codeblock', () => {
+    test('simple', () => {
+      const script = `
+      |\`\`\`
+      |My perfect code
+      |\`\`\`
+      `.trimMargin()
+
+      expect(parser.parse(script)).toMatchInlineSnapshot(`
+        [
+          {
+            "attributes": {
+              "code": {
+                "end": 23,
+                "start": 4,
+                "type": "string",
+                "value": "My perfect code",
+              },
+              "language": {
+                "end": 3,
+                "start": 3,
+                "type": "string",
+                "value": "",
+              },
+            },
+            "end": 23,
+            "rule": "codeblock",
+            "start": 0,
+            "type": "codeblock",
+          },
+        ]
+      `)
+    })
+
+    // Looks like unsupported for now
+    // https://github.com/TiddlyWiki/TiddlyWiki5/issues/8811
+    test('with css class', () => {
+      const script = `
+      |\`\`\`.css-class
+      |My perfect code
+      |\`\`\`
+      `.trimMargin()
+
+      expect(parser.parse(script)).toMatchInlineSnapshot(`
+        [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "end": 32,
+                    "start": 2,
+                    "text": "\`.css-class
+        My perfect code
+        ",
+                    "type": "text",
+                  },
+                ],
+                "end": 32,
+                "rule": "codeinline",
+                "start": 0,
+                "tag": "code",
+                "type": "element",
+              },
+              {
+                "children": [
+                  {
+                    "end": 33,
+                    "start": 33,
+                    "text": "",
+                    "type": "text",
+                  },
+                ],
+                "end": 33,
+                "rule": "codeinline",
+                "start": 32,
+                "tag": "code",
+                "type": "element",
+              },
+            ],
+            "end": 33,
+            "start": 0,
+            "tag": "p",
+            "type": "element",
+          },
+        ]
+      `)
+    })
+
+    test('with language', () => {
+      const script = `
+      |\`\`\`javascript
+      |My perfect code
+      |\`\`\`
+      `.trimMargin()
+
+      expect(parser.parse(script)).toMatchInlineSnapshot(`
+        [
+          {
+            "attributes": {
+              "code": {
+                "end": 33,
+                "start": 14,
+                "type": "string",
+                "value": "My perfect code",
+              },
+              "language": {
+                "end": 13,
+                "start": 3,
+                "type": "string",
+                "value": "javascript",
+              },
+            },
+            "end": 33,
+            "rule": "codeblock",
+            "start": 0,
+            "type": "codeblock",
+          },
+        ]
+      `)
+    })
+
+    test('unclosed', () => {
+      const script = `
+      |\`\`\`
+      |My perfect code
+      `.trimMargin()
+
+      expect(parser.parse(script)).toMatchInlineSnapshot(`
+        [
+          {
+            "attributes": {
+              "code": {
+                "end": 19,
+                "start": 4,
+                "type": "string",
+                "value": "My perfect code",
+              },
+              "language": {
+                "end": 3,
+                "start": 3,
+                "type": "string",
+                "value": "",
+              },
+            },
+            "end": 19,
+            "rule": "codeblock",
+            "start": 0,
+            "type": "codeblock",
+          },
+        ]
+      `)
+    })
+  })
+
+  describe('codeinline', () => {
+    test('single quotes', () => {
+      expect(parser.parse('`My perfect code`')).toMatchInlineSnapshot(`
+          [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "end": 17,
+                      "start": 1,
+                      "text": "My perfect code",
+                      "type": "text",
+                    },
+                  ],
+                  "end": 17,
+                  "rule": "codeinline",
+                  "start": 0,
+                  "tag": "code",
+                  "type": "element",
+                },
+              ],
+              "end": 17,
+              "start": 0,
+              "tag": "p",
+              "type": "element",
+            },
+          ]
+        `)
+    })
+
+    test('double quotes', () => {
+      expect(parser.parse('``My perfect code``')).toMatchInlineSnapshot(`
+          [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "end": 19,
+                      "start": 2,
+                      "text": "My perfect code",
+                      "type": "text",
+                    },
+                  ],
+                  "end": 19,
+                  "rule": "codeinline",
+                  "start": 0,
+                  "tag": "code",
+                  "type": "element",
+                },
+              ],
+              "end": 19,
+              "start": 0,
+              "tag": "p",
+              "type": "element",
+            },
+          ]
+        `)
+    })
+  })
+
+  describe('heading', () => {
+    test('h1', () => {
+      expect(parser.parse('! H1 Header Test')).toMatchInlineSnapshot(`
+        [
+          {
+            "attributes": {
+              "class": {
+                "end": 1,
+                "start": 1,
+                "type": "string",
+                "value": "",
+              },
+            },
+            "children": [
+              {
+                "end": 16,
+                "start": 2,
+                "text": "H1 Header Test",
+                "type": "text",
+              },
+            ],
+            "end": 16,
+            "rule": "heading",
+            "start": 0,
+            "tag": "h1",
+            "type": "element",
+          },
+        ]
+      `)
+    })
+
+    test('h2', () => {
+      expect(parser.parse('!! H2 Header Test')).toMatchInlineSnapshot(`
+        [
+          {
+            "attributes": {
+              "class": {
+                "end": 2,
+                "start": 2,
+                "type": "string",
+                "value": "",
+              },
+            },
+            "children": [
+              {
+                "end": 17,
+                "start": 3,
+                "text": "H2 Header Test",
+                "type": "text",
+              },
+            ],
+            "end": 17,
+            "rule": "heading",
+            "start": 0,
+            "tag": "h2",
+            "type": "element",
+          },
+        ]
+      `)
+    })
+
+    test('h3', () => {
+      expect(parser.parse('!!! H3 Header Test')).toMatchInlineSnapshot(`
+        [
+          {
+            "attributes": {
+              "class": {
+                "end": 3,
+                "start": 3,
+                "type": "string",
+                "value": "",
+              },
+            },
+            "children": [
+              {
+                "end": 18,
+                "start": 4,
+                "text": "H3 Header Test",
+                "type": "text",
+              },
+            ],
+            "end": 18,
+            "rule": "heading",
+            "start": 0,
+            "tag": "h3",
+            "type": "element",
+          },
+        ]
+      `)
+    })
+
+    test('h4', () => {
+      expect(parser.parse('!!!! H4 Header Test')).toMatchInlineSnapshot(`
+        [
+          {
+            "attributes": {
+              "class": {
+                "end": 4,
+                "start": 4,
+                "type": "string",
+                "value": "",
+              },
+            },
+            "children": [
+              {
+                "end": 19,
+                "start": 5,
+                "text": "H4 Header Test",
+                "type": "text",
+              },
+            ],
+            "end": 19,
+            "rule": "heading",
+            "start": 0,
+            "tag": "h4",
+            "type": "element",
+          },
+        ]
+      `)
+    })
+
+    test('h5', () => {
+      expect(parser.parse('!!!!! H5 Header Test')).toMatchInlineSnapshot(`
+        [
+          {
+            "attributes": {
+              "class": {
+                "end": 5,
+                "start": 5,
+                "type": "string",
+                "value": "",
+              },
+            },
+            "children": [
+              {
+                "end": 20,
+                "start": 6,
+                "text": "H5 Header Test",
+                "type": "text",
+              },
+            ],
+            "end": 20,
+            "rule": "heading",
+            "start": 0,
+            "tag": "h5",
+            "type": "element",
+          },
+        ]
+      `)
+    })
+
+    test('h6', () => {
+      expect(parser.parse('!!!!!! H6 Header Test')).toMatchInlineSnapshot(`
+        [
+          {
+            "attributes": {
+              "class": {
+                "end": 6,
+                "start": 6,
+                "type": "string",
+                "value": "",
+              },
+            },
+            "children": [
+              {
+                "end": 21,
+                "start": 7,
+                "text": "H6 Header Test",
+                "type": "text",
+              },
+            ],
+            "end": 21,
+            "rule": "heading",
+            "start": 0,
+            "tag": "h6",
+            "type": "element",
+          },
+        ]
+      `)
+    })
+
+    test('overflow', () => {
+      expect(parser.parse('!!!!!!! H6+ Header Test')).toMatchInlineSnapshot(`
+        [
+          {
+            "attributes": {
+              "class": {
+                "end": 6,
+                "start": 6,
+                "type": "string",
+                "value": "",
+              },
+            },
+            "children": [
+              {
+                "end": 23,
+                "start": 6,
+                "text": "! H6+ Header Test",
+                "type": "text",
+              },
+            ],
+            "end": 23,
+            "rule": "heading",
+            "start": 0,
+            "tag": "h6",
+            "type": "element",
+          },
+        ]
+      `)
+    })
+
+    test('with css class', () => {
+      expect(parser.parse('!!!.css-class H3 Header Test')).toMatchInlineSnapshot(`
+        [
+          {
+            "attributes": {
+              "class": {
+                "end": 13,
+                "start": 3,
+                "type": "string",
+                "value": "css-class",
+              },
+            },
+            "children": [
+              {
+                "end": 28,
+                "start": 14,
+                "text": "H3 Header Test",
+                "type": "text",
+              },
+            ],
+            "end": 28,
+            "rule": "heading",
+            "start": 0,
+            "tag": "h3",
+            "type": "element",
+          },
+        ]
+      `)
+    })
+  })
+
+  describe('quoteblock', () => {
     describe('multi-line', () => {
       test('simple', () => {
         const script = `
@@ -376,469 +799,6 @@ describe('testing tiddlywiki parser', () => {
           ]
         `)
       })
-    })
-  })
-
-  // https://tiddlywiki.com/static/Code%2520Blocks%2520in%2520WikiText.html
-  describe('Code Blocks', () => {
-    describe('multi-line', () => {
-      test('simple', () => {
-        const script = `
-      |\`\`\`
-      |My perfect code
-      |\`\`\`
-      `.trimMargin()
-
-        expect(parser.parse(script)).toMatchInlineSnapshot(`
-        [
-          {
-            "attributes": {
-              "code": {
-                "end": 23,
-                "start": 4,
-                "type": "string",
-                "value": "My perfect code",
-              },
-              "language": {
-                "end": 3,
-                "start": 3,
-                "type": "string",
-                "value": "",
-              },
-            },
-            "end": 23,
-            "rule": "codeblock",
-            "start": 0,
-            "type": "codeblock",
-          },
-        ]
-      `)
-      })
-
-      // Looks like unsupported for now
-      // https://github.com/TiddlyWiki/TiddlyWiki5/issues/8811
-      test('with css class', () => {
-        const script = `
-      |\`\`\`.css-class
-      |My perfect code
-      |\`\`\`
-      `.trimMargin()
-
-        expect(parser.parse(script)).toMatchInlineSnapshot(`
-        [
-          {
-            "children": [
-              {
-                "children": [
-                  {
-                    "end": 32,
-                    "start": 2,
-                    "text": "\`.css-class
-        My perfect code
-        ",
-                    "type": "text",
-                  },
-                ],
-                "end": 32,
-                "rule": "codeinline",
-                "start": 0,
-                "tag": "code",
-                "type": "element",
-              },
-              {
-                "children": [
-                  {
-                    "end": 33,
-                    "start": 33,
-                    "text": "",
-                    "type": "text",
-                  },
-                ],
-                "end": 33,
-                "rule": "codeinline",
-                "start": 32,
-                "tag": "code",
-                "type": "element",
-              },
-            ],
-            "end": 33,
-            "start": 0,
-            "tag": "p",
-            "type": "element",
-          },
-        ]
-      `)
-      })
-
-      test('with language', () => {
-        const script = `
-      |\`\`\`javascript
-      |My perfect code
-      |\`\`\`
-      `.trimMargin()
-
-        expect(parser.parse(script)).toMatchInlineSnapshot(`
-        [
-          {
-            "attributes": {
-              "code": {
-                "end": 33,
-                "start": 14,
-                "type": "string",
-                "value": "My perfect code",
-              },
-              "language": {
-                "end": 13,
-                "start": 3,
-                "type": "string",
-                "value": "javascript",
-              },
-            },
-            "end": 33,
-            "rule": "codeblock",
-            "start": 0,
-            "type": "codeblock",
-          },
-        ]
-      `)
-      })
-
-      test('unclosed', () => {
-        const script = `
-      |\`\`\`
-      |My perfect code
-      `.trimMargin()
-
-        expect(parser.parse(script)).toMatchInlineSnapshot(`
-        [
-          {
-            "attributes": {
-              "code": {
-                "end": 19,
-                "start": 4,
-                "type": "string",
-                "value": "My perfect code",
-              },
-              "language": {
-                "end": 3,
-                "start": 3,
-                "type": "string",
-                "value": "",
-              },
-            },
-            "end": 19,
-            "rule": "codeblock",
-            "start": 0,
-            "type": "codeblock",
-          },
-        ]
-      `)
-      })
-    })
-
-    describe('single-line', () => {
-      test('single quotes', () => {
-        expect(parser.parse('`My perfect code`')).toMatchInlineSnapshot(`
-          [
-            {
-              "children": [
-                {
-                  "children": [
-                    {
-                      "end": 17,
-                      "start": 1,
-                      "text": "My perfect code",
-                      "type": "text",
-                    },
-                  ],
-                  "end": 17,
-                  "rule": "codeinline",
-                  "start": 0,
-                  "tag": "code",
-                  "type": "element",
-                },
-              ],
-              "end": 17,
-              "start": 0,
-              "tag": "p",
-              "type": "element",
-            },
-          ]
-        `)
-      })
-
-      test('double quotes', () => {
-        expect(parser.parse('``My perfect code``')).toMatchInlineSnapshot(`
-          [
-            {
-              "children": [
-                {
-                  "children": [
-                    {
-                      "end": 19,
-                      "start": 2,
-                      "text": "My perfect code",
-                      "type": "text",
-                    },
-                  ],
-                  "end": 19,
-                  "rule": "codeinline",
-                  "start": 0,
-                  "tag": "code",
-                  "type": "element",
-                },
-              ],
-              "end": 19,
-              "start": 0,
-              "tag": "p",
-              "type": "element",
-            },
-          ]
-        `)
-      })
-    })
-  })
-
-  // https://tiddlywiki.com/static/Headings%2520in%2520WikiText.html
-  describe('Headings', () => {
-    test('h1', () => {
-      expect(parser.parse('! H1 Header Test')).toMatchInlineSnapshot(`
-        [
-          {
-            "attributes": {
-              "class": {
-                "end": 1,
-                "start": 1,
-                "type": "string",
-                "value": "",
-              },
-            },
-            "children": [
-              {
-                "end": 16,
-                "start": 2,
-                "text": "H1 Header Test",
-                "type": "text",
-              },
-            ],
-            "end": 16,
-            "rule": "heading",
-            "start": 0,
-            "tag": "h1",
-            "type": "element",
-          },
-        ]
-      `)
-    })
-
-    test('h2', () => {
-      expect(parser.parse('!! H2 Header Test')).toMatchInlineSnapshot(`
-        [
-          {
-            "attributes": {
-              "class": {
-                "end": 2,
-                "start": 2,
-                "type": "string",
-                "value": "",
-              },
-            },
-            "children": [
-              {
-                "end": 17,
-                "start": 3,
-                "text": "H2 Header Test",
-                "type": "text",
-              },
-            ],
-            "end": 17,
-            "rule": "heading",
-            "start": 0,
-            "tag": "h2",
-            "type": "element",
-          },
-        ]
-      `)
-    })
-
-    test('h3', () => {
-      expect(parser.parse('!!! H3 Header Test')).toMatchInlineSnapshot(`
-        [
-          {
-            "attributes": {
-              "class": {
-                "end": 3,
-                "start": 3,
-                "type": "string",
-                "value": "",
-              },
-            },
-            "children": [
-              {
-                "end": 18,
-                "start": 4,
-                "text": "H3 Header Test",
-                "type": "text",
-              },
-            ],
-            "end": 18,
-            "rule": "heading",
-            "start": 0,
-            "tag": "h3",
-            "type": "element",
-          },
-        ]
-      `)
-    })
-
-    test('h4', () => {
-      expect(parser.parse('!!!! H4 Header Test')).toMatchInlineSnapshot(`
-        [
-          {
-            "attributes": {
-              "class": {
-                "end": 4,
-                "start": 4,
-                "type": "string",
-                "value": "",
-              },
-            },
-            "children": [
-              {
-                "end": 19,
-                "start": 5,
-                "text": "H4 Header Test",
-                "type": "text",
-              },
-            ],
-            "end": 19,
-            "rule": "heading",
-            "start": 0,
-            "tag": "h4",
-            "type": "element",
-          },
-        ]
-      `)
-    })
-
-    test('h5', () => {
-      expect(parser.parse('!!!!! H5 Header Test')).toMatchInlineSnapshot(`
-        [
-          {
-            "attributes": {
-              "class": {
-                "end": 5,
-                "start": 5,
-                "type": "string",
-                "value": "",
-              },
-            },
-            "children": [
-              {
-                "end": 20,
-                "start": 6,
-                "text": "H5 Header Test",
-                "type": "text",
-              },
-            ],
-            "end": 20,
-            "rule": "heading",
-            "start": 0,
-            "tag": "h5",
-            "type": "element",
-          },
-        ]
-      `)
-    })
-
-    test('h6', () => {
-      expect(parser.parse('!!!!!! H6 Header Test')).toMatchInlineSnapshot(`
-        [
-          {
-            "attributes": {
-              "class": {
-                "end": 6,
-                "start": 6,
-                "type": "string",
-                "value": "",
-              },
-            },
-            "children": [
-              {
-                "end": 21,
-                "start": 7,
-                "text": "H6 Header Test",
-                "type": "text",
-              },
-            ],
-            "end": 21,
-            "rule": "heading",
-            "start": 0,
-            "tag": "h6",
-            "type": "element",
-          },
-        ]
-      `)
-    })
-
-    test('overflow', () => {
-      expect(parser.parse('!!!!!!! H6+ Header Test')).toMatchInlineSnapshot(`
-        [
-          {
-            "attributes": {
-              "class": {
-                "end": 6,
-                "start": 6,
-                "type": "string",
-                "value": "",
-              },
-            },
-            "children": [
-              {
-                "end": 23,
-                "start": 6,
-                "text": "! H6+ Header Test",
-                "type": "text",
-              },
-            ],
-            "end": 23,
-            "rule": "heading",
-            "start": 0,
-            "tag": "h6",
-            "type": "element",
-          },
-        ]
-      `)
-    })
-
-    test('with css class', () => {
-      expect(parser.parse('!!!.css-class H3 Header Test')).toMatchInlineSnapshot(`
-        [
-          {
-            "attributes": {
-              "class": {
-                "end": 13,
-                "start": 3,
-                "type": "string",
-                "value": "css-class",
-              },
-            },
-            "children": [
-              {
-                "end": 28,
-                "start": 14,
-                "text": "H3 Header Test",
-                "type": "text",
-              },
-            ],
-            "end": 28,
-            "rule": "heading",
-            "start": 0,
-            "tag": "h3",
-            "type": "element",
-          },
-        ]
-      `)
     })
   })
 })
