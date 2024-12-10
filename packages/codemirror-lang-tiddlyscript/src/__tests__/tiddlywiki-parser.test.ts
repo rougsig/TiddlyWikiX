@@ -1,5 +1,7 @@
 import './trim-margin'
 import {TiddlyWikiParser} from '#/tiddlywiki-parser'
+import {printTree} from '@lezer-unofficial/printer'
+import {parser as markdownParser} from '@lezer/markdown'
 import {TiddlyWiki} from 'tiddlywiki'
 import {beforeAll, describe, expect, test} from 'vitest'
 
@@ -12,6 +14,56 @@ import {beforeAll, describe, expect, test} from 'vitest'
 //
 describe('testing tiddlywiki parser', () => {
   let parser: TiddlyWikiParser
+
+  test('lezer-markdown', () => {
+    const source = `
+    |# H1 Header Test
+    |## H2 Header Test
+    |### H3 Header Test
+    |#### H4 Header Test
+    |##### H5 Header Test
+    |###### H6 Header Test
+    |
+    |**BOLD**
+    |
+    |> Blockquotes can also be nested...
+    |>> ...by using additional greater-than signs right next to each other...
+    |> > > ...or with spaces between arrows.
+    |
+    `.trimMargin()
+    const tree = markdownParser.parse(source)
+    expect(printTree(tree, source)).toMatchInlineSnapshot(`
+      "Document [1:0..13:0]
+      ┣━  ATXHeading1 [1:0..1:16]
+      ┃   ┗━  HeaderMark [1:0..1:1]: "#"
+      ┣━  ATXHeading2 [2:0..2:17]
+      ┃   ┗━  HeaderMark [2:0..2:2]: "##"
+      ┣━  ATXHeading3 [3:0..3:18]
+      ┃   ┗━  HeaderMark [3:0..3:3]: "###"
+      ┣━  ATXHeading4 [4:0..4:19]
+      ┃   ┗━  HeaderMark [4:0..4:4]: "####"
+      ┣━  ATXHeading5 [5:0..5:20]
+      ┃   ┗━  HeaderMark [5:0..5:5]: "#####"
+      ┣━  ATXHeading6 [6:0..6:21]
+      ┃   ┗━  HeaderMark [6:0..6:6]: "######"
+      ┣━  Paragraph [8:0..8:8]
+      ┃   ┗━  StrongEmphasis [8:0..8:8]
+      ┃       ┣━  EmphasisMark [8:0..8:2]: "**"
+      ┃       ┗━  EmphasisMark [8:6..8:8]: "**"
+      ┗━  Blockquote [10:0..12:39]
+          ┣━  QuoteMark [10:0..10:1]: ">"
+          ┣━  Paragraph [10:2..10:35]: "Blockquotes can also be nested..."
+          ┣━  QuoteMark [11:0..11:1]: ">"
+          ┗━  Blockquote [11:1..12:39]
+              ┣━  QuoteMark [11:1..11:2]: ">"
+              ┣━  Paragraph [11:3..11:72]: "...by using additional greater-than signs right next to each other..."
+              ┣━  QuoteMark [12:0..12:1]: ">"
+              ┣━  QuoteMark [12:2..12:3]: ">"
+              ┗━  Blockquote [12:4..12:39]
+                  ┣━  QuoteMark [12:4..12:5]: ">"
+                  ┗━  Paragraph [12:6..12:39]: "...or with spaces between arrows.""
+    `)
+  })
 
   beforeAll(async () => {
     const $tw = TiddlyWiki();
