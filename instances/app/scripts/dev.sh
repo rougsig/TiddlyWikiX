@@ -1,4 +1,5 @@
 pnpm nodemon \
+  --delay 4 \
   --ext js,info,tid \
   --ignore mywiki/tiddlers \
   --exec ./node_modules/tiddlywiki/tiddlywiki.js \

@@ -43,5 +43,8 @@ export default defineConfig(() => ({
   noExternal: [
     'codemirror',
     '@codemirror',
+    '@lezer',
+    '@rougsig',
+    '@lezer-unofficial',
   ],
 }))

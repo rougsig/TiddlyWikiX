@@ -72,25 +72,6 @@ importers:
 
   packages/codemirror-lang-tiddlyscript:
     dependencies:
-      '@lezer-unofficial/printer':
-        specifier: ^1.0.1
-        version: 1.0.1
-      '@lezer/markdown':
-        specifier: ^1.3.2
-        version: 1.3.2
-    devDependencies:
-      '@repo/build-logic':
-        specifier: workspace:*
-        version: link:../build-logic
-      '@repo/tsconfig':
-        specifier: workspace:*
-        version: link:../tsconfig
-      jsdom:
-        specifier: ^25.0.1
-        version: 25.0.1
-
-  packages/codemirror-lang-tiddlywiki:
-    dependencies:
       '@codemirror/language':
         specifier: ^6.10.6
         version: 6.10.6
@@ -103,6 +84,9 @@ importers:
       '@lezer/common':
         specifier: ^1.2.3
         version: 1.2.3
+      '@lezer/highlight':
+        specifier: ^1.2.1
+        version: 1.2.1
       codemirror:
         specifier: ^6.0.1
         version: 6.0.1(@lezer/common@1.2.3)
@@ -110,21 +94,27 @@ importers:
         specifier: ^5.3.6
         version: 5.3.6
     devDependencies:
+      '@lezer-unofficial/printer':
+        specifier: ^1.0.1
+        version: 1.0.1
+      '@lezer/markdown':
+        specifier: ^1.3.2
+        version: 1.3.2
       '@repo/build-logic':
         specifier: workspace:*
         version: link:../build-logic
       '@repo/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
-      '@tiddlygit/tiddlywiki-pr-nightly':
-        specifier: 5.3.6-prerelease-20241011-pr-8258-6
-        version: 5.3.6-prerelease-20241011-pr-8258-6
       jsdom:
         specifier: ^25.0.1
         version: 25.0.1
 
   packages/plugins/twx-editor:
     dependencies:
+      '@codemirror/lang-javascript':
+        specifier: ^6.2.2
+        version: 6.2.2
       '@codemirror/language':
         specifier: ^6.10.6
         version: 6.10.6
@@ -134,9 +124,18 @@ importers:
       '@codemirror/view':
         specifier: ^6.35.2
         version: 6.35.2
+      '@lezer-unofficial/printer':
+        specifier: ^1.0.1
+        version: 1.0.1
       '@lezer/common':
         specifier: ^1.2.3
         version: 1.2.3
+      '@lezer/highlight':
+        specifier: ^1.2.1
+        version: 1.2.1
+      '@rougsig/codemirror-lang-tiddlyscript':
+        specifier: workspace:*
+        version: link:../../codemirror-lang-tiddlyscript
       codemirror:
         specifier: ^6.0.1
         version: 6.0.1(@lezer/common@1.2.3)
@@ -176,6 +175,9 @@ packages:
 
   '@codemirror/commands@6.7.1':
     resolution: {integrity: sha512-llTrboQYw5H4THfhN4U3qCnSZ1SOJ60ohhz+SzU0ADGtwlc533DtklQP0vSFaQuCPDn3BPpOd1GbbnUtwNjsrw==}
+
+  '@codemirror/lang-javascript@6.2.2':
+    resolution: {integrity: sha512-VGQfY+FCc285AhWuwjYxQyUQcYurWlxdKYT4bqwr3Twnd5wP5WSeu52t4tvvuWmljT4EmgEgZCqSieokhtY8hg==}
 
   '@codemirror/language@6.10.6':
     resolution: {integrity: sha512-KrsbdCnxEztLVbB5PycWXFxas4EOyk/fPAfruSOnDDppevQgid2XZ+KbJ9u+fDikP/e7MW7HPBTvTb8JlZK9vA==}
@@ -649,6 +651,9 @@ packages:
   '@lezer/highlight@1.2.1':
     resolution: {integrity: sha512-Z5duk4RN/3zuVO7Jq0pGLJ3qynpxUVsh7IbUbGj88+uV2ApSAn6kWg2au3iJb+0Zi7kKtqffIESgNcRXWZWmSA==}
 
+  '@lezer/javascript@1.4.21':
+    resolution: {integrity: sha512-lL+1fcuxWYPURMM/oFZLEDm0XuLN128QPV+VuGtKpeaOGdcl9F2LYC3nh1S9LkPqx9M0mndZFdXCipNAZpzIkQ==}
+
   '@lezer/lr@1.4.2':
     resolution: {integrity: sha512-pu0K1jCIdnQ12aWNaAVU5bzi7Bd1w54J3ECgANPmYLtQKP0HBj2cE/5coBD66MT10xbtIuUr7tg0Shbsvk0mDA==}
 
@@ -800,12 +805,6 @@ packages:
 
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
-
-  '@tiddlygit/tiddlywiki-pr-nightly@5.3.6-prerelease-20241011-pr-8258-6':
-    resolution: {integrity: sha512-VKvLdFz7qwQTVGIUe9s5q/qhptbErNW5t4shvIzIb/ljDRw6/J2WBAqQpoSh7/vxrbZHSAMMUXLMr0qpNqYj1g==}
-    engines: {node: '>=0.8.2'}
-    hasBin: true
-    bundledDependencies: []
 
   '@types/argparse@1.0.38':
     resolution: {integrity: sha512-ebDJ9b0e702Yr7pWgB0jzm+CX4Srzz8RcXtLJDJB+BSccqMa36uyH/zUsSYao5+BD1ytv3k3rPYCq4mAE1hsXA==}
@@ -2338,6 +2337,16 @@ snapshots:
       '@codemirror/view': 6.35.2
       '@lezer/common': 1.2.3
 
+  '@codemirror/lang-javascript@6.2.2':
+    dependencies:
+      '@codemirror/autocomplete': 6.18.3(@codemirror/language@6.10.6)(@codemirror/state@6.4.1)(@codemirror/view@6.35.2)(@lezer/common@1.2.3)
+      '@codemirror/language': 6.10.6
+      '@codemirror/lint': 6.8.4
+      '@codemirror/state': 6.4.1
+      '@codemirror/view': 6.35.2
+      '@lezer/common': 1.2.3
+      '@lezer/javascript': 1.4.21
+
   '@codemirror/language@6.10.6':
     dependencies:
       '@codemirror/state': 6.4.1
@@ -2617,6 +2626,12 @@ snapshots:
     dependencies:
       '@lezer/common': 1.2.3
 
+  '@lezer/javascript@1.4.21':
+    dependencies:
+      '@lezer/common': 1.2.3
+      '@lezer/highlight': 1.2.1
+      '@lezer/lr': 1.4.2
+
   '@lezer/lr@1.4.2':
     dependencies:
       '@lezer/common': 1.2.3
@@ -2764,8 +2779,6 @@ snapshots:
       - '@types/node'
 
   '@socket.io/component-emitter@3.1.2': {}
-
-  '@tiddlygit/tiddlywiki-pr-nightly@5.3.6-prerelease-20241011-pr-8258-6': {}
 
   '@types/argparse@1.0.38': {}
 

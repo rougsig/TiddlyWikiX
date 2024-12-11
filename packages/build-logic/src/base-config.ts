@@ -28,7 +28,7 @@ export const createConfig = (args: CreateConfigArgs) => {
               include: [
                 /rollup.*/,
                 /vite.*/,
-              ]
+              ],
             }),
           ],
         },
