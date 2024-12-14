@@ -9,6 +9,6 @@
     "@repo/tsconfig": "workspace:*"
   },
   "scripts": {
-    "dev": "sh ./scripts/dev.sh"
+    "dev": "./scripts/dev.js"
   }
 }

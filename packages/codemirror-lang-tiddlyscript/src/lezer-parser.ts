@@ -21,6 +21,7 @@ class MyPartialParse implements PartialParse {
   stoppedAt: number | null = null
 
   constructor(readonly length: number) {
+    console.log('MyPartialParse', this.length)
   }
 
   /**
@@ -65,6 +66,7 @@ class MyPartialParse implements PartialParse {
         1, 0, 30, 12,
       ],
     })
+    console.log('Hello World 4')
     console.log(nodeSet, builded)
     return builded
   }

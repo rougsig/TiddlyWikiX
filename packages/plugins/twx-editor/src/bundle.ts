@@ -22,7 +22,7 @@ export const createEditor = (parent: Element) => {
     doc: '',
     extensions: [
       basicSetup,
-      javascript(),
+      lang,
       syntaxHighlighting(classHighlighter),
       // syntaxHighlighting(HighlightStyle.define([
       //   {tag: tags.variableName, class: 'my-variable-ame'},
