@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const browserSync = require('browser-sync');
-const nodemon = require('nodemon');
+const browserSync = require('browser-sync')
+const nodemon = require('nodemon')
 
 nodemon({
   script: 'node_modules/tiddlywiki/tiddlywiki.js',
@@ -9,27 +9,28 @@ nodemon({
   ext: 'js,info,tid',
   delay: 4,
   ignore: ['mywiki/tiddlers']
-});
+})
 
-const bs = browserSync.create();
+const bs = browserSync.create()
+bs.init({
+  proxy: 'http://localhost:4801',
+  port: 4800,
+  open: false,
+})
+
 nodemon
   .on('start', () => {
-    console.log('Nodemon started');
-    browserSync.init({
-      proxy: 'http://localhost:4801',
-      port: 4800,
-      open: false,
-    });
+    console.log('Nodemon started')
   })
   .on('restart', () => {
-    console.log('Nodemon restarting due to changes...');
-    bs.reload();
+    console.log('Nodemon restarting due to changes...')
+    bs.reload()
   })
   .on('crash', () => {
-    console.error('Nodemon crashed for some reason');
+    console.error('Nodemon crashed for some reason')
   })
   .on('quit', () => {
-    console.log('Nodemon has quit');
-    bs.exit();
-    process.exit();
-  });
+    console.log('Nodemon has quit')
+    bs.exit()
+    process.exit()
+  })

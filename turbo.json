@@ -14,9 +14,17 @@
         "^check-types"
       ]
     },
+    "build:dev": {
+      "dependsOn": [
+        "^build:dev"
+      ],
+      "outputs": [
+        "dist/**"
+      ]
+    },
     "dev": {
       "dependsOn": [
-        "^build"
+        "build:dev"
       ],
       "persistent": true,
       "cache": false

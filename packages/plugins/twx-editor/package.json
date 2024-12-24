@@ -6,8 +6,8 @@
   },
   "scripts": {
     "build": "tsup",
-    "check-types": "tsc --noEmit",
-    "dev": "tsup --watch"
+    "build:dev": "tsup",
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.2.2",

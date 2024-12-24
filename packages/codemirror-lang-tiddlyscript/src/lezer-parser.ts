@@ -66,7 +66,6 @@ class MyPartialParse implements PartialParse {
         1, 0, 30, 12,
       ],
     })
-    console.log('Hello World 4')
     console.log(nodeSet, builded)
     return builded
   }

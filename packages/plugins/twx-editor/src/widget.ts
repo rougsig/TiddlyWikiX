@@ -20,6 +20,10 @@ class TWXEditor extends Widget {
           !!!! H4 | Hello World
           !!!!! H5 | Hello World
           !!!!!! H6 | Hello World
+          
+          ---
+          
+          Test
         `,
       }
     })

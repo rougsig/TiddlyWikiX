@@ -4,12 +4,11 @@
   "private": true,
   "type": "module",
   "sideEffects": false,
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts",
-      "source": "./src/index.ts"
-    }
+  "exports": "./dist/index.js",
+  "types": "./src/index.ts",
+  "publishConfig": {
+    "exports": "./dist/index.js",
+    "types": "./dist/index.d.ts"
   },
   "files": [
     "dist/**",
@@ -33,8 +32,8 @@
   },
   "scripts": {
     "build": "vite build",
-    "check-types": "tsc --noEmit",
-    "dev": "vite build --watch"
+    "build:dev": "vite build --mode development",
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
   }
