@@ -1,76 +1,64 @@
-import {nodeSet, NodeType} from '#/node-type'
 import {defineLanguageFacet, Language, LanguageSupport} from '@codemirror/language'
-import {Input, Parser, PartialParse, Tree, TreeFragment} from '@lezer/common'
+import {Input, NodeSet, NodeType, Parser, PartialParse, Tree, TreeFragment} from '@lezer/common'
+import {styleTags, tags} from '@lezer/highlight'
 
-class MyParser extends Parser {
+// Define node types
+const nodeTypes = {
+  Document: 0,
+  Text: 1,
+}
+
+const nodeSet = new NodeSet([
+  NodeType.define({id: nodeTypes.Document, name: 'Document'}),
+  NodeType.define({id: nodeTypes.Text, name: 'Text'}),
+])
+  .extend(styleTags({
+    'Text': tags.comment,
+  }))
+
+class TiddlyScriptParser extends Parser {
   createParse(
     input: Input,
     fragments: readonly TreeFragment[],
     ranges: readonly {from: number, to: number}[],
   ): PartialParse {
-    console.log('input=', input)
-    console.log('fragments=', fragments)
-    console.log('ranges=', ranges)
-
-    return new MyPartialParse(input.length)
+    return new TiddlyScriptPartialParse(input.length)
   }
 }
 
-class MyPartialParse implements PartialParse {
+class TiddlyScriptPartialParse implements PartialParse {
   parsedPos: number = 0
   stoppedAt: number | null = null
 
   constructor(readonly length: number) {
-    console.log('MyPartialParse', this.length)
   }
 
-  /**
-   The buffer or buffer cursor to read the node data from.
-
-   When this is an array, it should contain four values for every
-   node in the tree.
-
-   - The first holds the node's type, as a node ID pointing into
-   the given `NodeSet`.
-   - The second holds the node's start offset.
-   - The third the end offset.
-   - The fourth the amount of space taken up in the array by this
-   node and its children. Since there's four values per node,
-   this is the total number of nodes inside this node (children
-   and transitive children) plus one for the node itself, times
-   four.
-
-   Parent nodes should appear _after_ child nodes in the array. As
-   an example, a node of type 10 spanning positions 0 to 4, with
-   two children, of type 11 and 12, might look like this:
-
-   [
-   11, 0, 1, 4,
-   12, 2, 4, 4,
-   10, 0, 4, 12,
-   ]
-   */
-
   advance(): Tree | null {
-    console.log('length', this.length)
+    // Return empty tree for very short content
     if (this.length <= 30) return Tree.empty
 
+    // Mark entire content as parsed
     this.parsedPos = this.length
-    const builded = Tree.build({
-      nodeSet: nodeSet,
-      topID: NodeType.Document,
+
+    // Build and return tree
+    return Tree.build({
+      nodeSet,
+      topID: nodeTypes.Document,
       buffer: [
-        2, 0, 10, 4,
-        2, 11, 20, 4,
-        2, 21, 30, 4,
-        1, 0, 30, 12,
+        // Text nodes
+        nodeTypes.Text, 0, 10, 4,
+        nodeTypes.Text, 11, 20, 4,
+        nodeTypes.Text, 21, 30, 4,
+        // Document node containing the text nodes
+        nodeTypes.Document, 0, 30, 16,
       ],
     })
-    console.log(nodeSet, builded)
-    return builded
   }
 
   stopAt(pos: number): void {
+    if (pos > 0 && pos <= this.length) {
+      this.stoppedAt = pos
+    }
   }
 }
 
@@ -78,7 +66,7 @@ export const tiddlyscript = () => {
   return new LanguageSupport(
     new Language(
       defineLanguageFacet(),
-      new MyParser(),
+      new TiddlyScriptParser(),
       [],
       'tiddlyscript',
     ),

@@ -4,11 +4,15 @@
   "private": true,
   "type": "module",
   "sideEffects": false,
-  "exports": "./dist/index.js",
-  "types": "./src/index.ts",
+  "exports": {
+    "import": "./dist/index.js",
+    "types": "./src/index.ts"
+  },
   "publishConfig": {
-    "exports": "./dist/index.js",
-    "types": "./dist/index.d.ts"
+    "exports": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
   },
   "files": [
     "dist/**",
