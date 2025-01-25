@@ -1,8 +1,7 @@
 import './trim-margin'
-import {TiddlyWikiParser} from '#/tiddlywiki-parser'
 import {printTree} from '@lezer-unofficial/printer'
 import {parser as markdownParser} from '@lezer/markdown'
-import {TiddlyWiki} from 'tiddlywiki'
+import {IParseTreeNode, TiddlyWiki} from 'tiddlywiki'
 import {beforeAll, describe, expect, test} from 'vitest'
 
 //
@@ -13,7 +12,7 @@ import {beforeAll, describe, expect, test} from 'vitest'
 // https://github.com/TiddlyWiki/TiddlyWiki5/blob/master/core/modules/parsers/wikiparser/rules
 //
 describe('testing tiddlywiki parser', () => {
-  let parser: TiddlyWikiParser
+  let parse: (input: string) => IParseTreeNode[]
 
   test('lezer-markdown', () => {
     const source = `
@@ -72,7 +71,8 @@ describe('testing tiddlywiki parser', () => {
     await new Promise<void>((resolve: () => unknown) => {
       $tw.boot.boot(resolve)
     })
-    parser = new TiddlyWikiParser()
+
+    parse = (input: string) => $tw.wiki.parseText('text/vnd.tiddlywiki', input).tree
   })
 
   test('$tw is defined', () => {
@@ -95,7 +95,7 @@ describe('testing tiddlywiki parser', () => {
     |> > > ...or with spaces between arrows.
     |
     `.trimMargin()
-    expect(parser.parse(source)).toMatchInlineSnapshot(`
+    expect(parse(source)).toMatchInlineSnapshot(`
       [
         {
           "attributes": {
@@ -329,7 +329,7 @@ describe('testing tiddlywiki parser', () => {
       |\`\`\`
       `.trimMargin()
 
-      expect(parser.parse(script)).toMatchInlineSnapshot(`
+      expect(parse(script)).toMatchInlineSnapshot(`
         [
           {
             "attributes": {
@@ -364,7 +364,7 @@ describe('testing tiddlywiki parser', () => {
       |\`\`\`
       `.trimMargin()
 
-      expect(parser.parse(script)).toMatchInlineSnapshot(`
+      expect(parse(script)).toMatchInlineSnapshot(`
         [
           {
             "children": [
@@ -417,7 +417,7 @@ describe('testing tiddlywiki parser', () => {
       |\`\`\`
       `.trimMargin()
 
-      expect(parser.parse(script)).toMatchInlineSnapshot(`
+      expect(parse(script)).toMatchInlineSnapshot(`
         [
           {
             "attributes": {
@@ -449,7 +449,7 @@ describe('testing tiddlywiki parser', () => {
       |My perfect code
       `.trimMargin()
 
-      expect(parser.parse(script)).toMatchInlineSnapshot(`
+      expect(parse(script)).toMatchInlineSnapshot(`
         [
           {
             "attributes": {
@@ -478,7 +478,7 @@ describe('testing tiddlywiki parser', () => {
 
   describe('codeinline', () => {
     test('single quotes', () => {
-      expect(parser.parse('`My perfect code`')).toMatchInlineSnapshot(`
+      expect(parse('`My perfect code`')).toMatchInlineSnapshot(`
           [
             {
               "children": [
@@ -508,7 +508,7 @@ describe('testing tiddlywiki parser', () => {
     })
 
     test('double quotes', () => {
-      expect(parser.parse('``My perfect code``')).toMatchInlineSnapshot(`
+      expect(parse('``My perfect code``')).toMatchInlineSnapshot(`
           [
             {
               "children": [
@@ -540,7 +540,7 @@ describe('testing tiddlywiki parser', () => {
 
   describe('heading', () => {
     test('h1', () => {
-      expect(parser.parse('! H1 Header Test')).toMatchInlineSnapshot(`
+      expect(parse('! H1 Header Test')).toMatchInlineSnapshot(`
         [
           {
             "attributes": {
@@ -570,7 +570,7 @@ describe('testing tiddlywiki parser', () => {
     })
 
     test('h2', () => {
-      expect(parser.parse('!! H2 Header Test')).toMatchInlineSnapshot(`
+      expect(parse('!! H2 Header Test')).toMatchInlineSnapshot(`
         [
           {
             "attributes": {
@@ -600,7 +600,7 @@ describe('testing tiddlywiki parser', () => {
     })
 
     test('h3', () => {
-      expect(parser.parse('!!! H3 Header Test')).toMatchInlineSnapshot(`
+      expect(parse('!!! H3 Header Test')).toMatchInlineSnapshot(`
         [
           {
             "attributes": {
@@ -630,7 +630,7 @@ describe('testing tiddlywiki parser', () => {
     })
 
     test('h4', () => {
-      expect(parser.parse('!!!! H4 Header Test')).toMatchInlineSnapshot(`
+      expect(parse('!!!! H4 Header Test')).toMatchInlineSnapshot(`
         [
           {
             "attributes": {
@@ -660,7 +660,7 @@ describe('testing tiddlywiki parser', () => {
     })
 
     test('h5', () => {
-      expect(parser.parse('!!!!! H5 Header Test')).toMatchInlineSnapshot(`
+      expect(parse('!!!!! H5 Header Test')).toMatchInlineSnapshot(`
         [
           {
             "attributes": {
@@ -690,7 +690,7 @@ describe('testing tiddlywiki parser', () => {
     })
 
     test('h6', () => {
-      expect(parser.parse('!!!!!! H6 Header Test')).toMatchInlineSnapshot(`
+      expect(parse('!!!!!! H6 Header Test')).toMatchInlineSnapshot(`
         [
           {
             "attributes": {
@@ -720,7 +720,7 @@ describe('testing tiddlywiki parser', () => {
     })
 
     test('overflow', () => {
-      expect(parser.parse('!!!!!!! H6+ Header Test')).toMatchInlineSnapshot(`
+      expect(parse('!!!!!!! H6+ Header Test')).toMatchInlineSnapshot(`
         [
           {
             "attributes": {
@@ -750,7 +750,7 @@ describe('testing tiddlywiki parser', () => {
     })
 
     test('with css class', () => {
-      expect(parser.parse('!!!.css-class H3 Header Test')).toMatchInlineSnapshot(`
+      expect(parse('!!!.css-class H3 Header Test')).toMatchInlineSnapshot(`
         [
           {
             "attributes": {
@@ -790,7 +790,7 @@ describe('testing tiddlywiki parser', () => {
         |<<<
         `.trimMargin()
 
-        expect(parser.parse(script)).toMatchInlineSnapshot(`
+        expect(parse(script)).toMatchInlineSnapshot(`
           [
             {
               "attributes": {
@@ -836,7 +836,7 @@ describe('testing tiddlywiki parser', () => {
         |<<< Author
         `.trimMargin()
 
-        expect(parser.parse(script)).toMatchInlineSnapshot(`
+        expect(parse(script)).toMatchInlineSnapshot(`
           [
             {
               "attributes": {
@@ -895,7 +895,7 @@ describe('testing tiddlywiki parser', () => {
         |<<< Nobody
         `.trimMargin()
 
-        expect(parser.parse(script)).toMatchInlineSnapshot(`
+        expect(parse(script)).toMatchInlineSnapshot(`
           [
             {
               "attributes": {
@@ -953,7 +953,7 @@ describe('testing tiddlywiki parser', () => {
         |Text
         `.trimMargin()
 
-        expect(parser.parse(script)).toMatchInlineSnapshot(`
+        expect(parse(script)).toMatchInlineSnapshot(`
           [
             {
               "attributes": {
@@ -993,7 +993,7 @@ describe('testing tiddlywiki parser', () => {
 
     describe('single-line', () => {
       test('simple', () => {
-        expect(parser.parse('> Quoted text')).toMatchInlineSnapshot(`
+        expect(parse('> Quoted text')).toMatchInlineSnapshot(`
           [
             {
               "children": [
@@ -1029,7 +1029,7 @@ describe('testing tiddlywiki parser', () => {
         |> Another top quote
         `.trimMargin()
 
-        expect(parser.parse(script)).toMatchInlineSnapshot(`
+        expect(parse(script)).toMatchInlineSnapshot(`
           [
             {
               "children": [
