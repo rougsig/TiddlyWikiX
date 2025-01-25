@@ -79,6 +79,248 @@ describe('testing tiddlywiki parser', () => {
     expect($tw).toBeDefined()
   })
 
+  test('same as lezer-markdown', () => {
+    const source = `
+    |! H1 Header Test
+    |!! H2 Header Test
+    |!!! H3 Header Test
+    |!!!! H4 Header Test
+    |!!!!! H5 Header Test
+    |!!!!!! H6 Header Test
+    |
+    |''BOLD''
+    |
+    |> Blockquotes can also be nested...
+    |>> ...by using additional greater-than signs right next to each other...
+    |> > > ...or with spaces between arrows.
+    |
+    `.trimMargin()
+    expect(parser.parse(source)).toMatchInlineSnapshot(`
+      [
+        {
+          "attributes": {
+            "class": {
+              "end": 1,
+              "start": 1,
+              "type": "string",
+              "value": "",
+            },
+          },
+          "children": [
+            {
+              "end": 16,
+              "start": 2,
+              "text": "H1 Header Test",
+              "type": "text",
+            },
+          ],
+          "end": 16,
+          "rule": "heading",
+          "start": 0,
+          "tag": "h1",
+          "type": "element",
+        },
+        {
+          "attributes": {
+            "class": {
+              "end": 19,
+              "start": 19,
+              "type": "string",
+              "value": "",
+            },
+          },
+          "children": [
+            {
+              "end": 34,
+              "start": 20,
+              "text": "H2 Header Test",
+              "type": "text",
+            },
+          ],
+          "end": 34,
+          "rule": "heading",
+          "start": 17,
+          "tag": "h2",
+          "type": "element",
+        },
+        {
+          "attributes": {
+            "class": {
+              "end": 38,
+              "start": 38,
+              "type": "string",
+              "value": "",
+            },
+          },
+          "children": [
+            {
+              "end": 53,
+              "start": 39,
+              "text": "H3 Header Test",
+              "type": "text",
+            },
+          ],
+          "end": 53,
+          "rule": "heading",
+          "start": 35,
+          "tag": "h3",
+          "type": "element",
+        },
+        {
+          "attributes": {
+            "class": {
+              "end": 58,
+              "start": 58,
+              "type": "string",
+              "value": "",
+            },
+          },
+          "children": [
+            {
+              "end": 73,
+              "start": 59,
+              "text": "H4 Header Test",
+              "type": "text",
+            },
+          ],
+          "end": 73,
+          "rule": "heading",
+          "start": 54,
+          "tag": "h4",
+          "type": "element",
+        },
+        {
+          "attributes": {
+            "class": {
+              "end": 79,
+              "start": 79,
+              "type": "string",
+              "value": "",
+            },
+          },
+          "children": [
+            {
+              "end": 94,
+              "start": 80,
+              "text": "H5 Header Test",
+              "type": "text",
+            },
+          ],
+          "end": 94,
+          "rule": "heading",
+          "start": 74,
+          "tag": "h5",
+          "type": "element",
+        },
+        {
+          "attributes": {
+            "class": {
+              "end": 101,
+              "start": 101,
+              "type": "string",
+              "value": "",
+            },
+          },
+          "children": [
+            {
+              "end": 116,
+              "start": 102,
+              "text": "H6 Header Test",
+              "type": "text",
+            },
+          ],
+          "end": 116,
+          "rule": "heading",
+          "start": 95,
+          "tag": "h6",
+          "type": "element",
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "end": 124,
+                  "start": 120,
+                  "text": "BOLD",
+                  "type": "text",
+                },
+              ],
+              "end": 126,
+              "rule": "bold",
+              "start": 118,
+              "tag": "strong",
+              "type": "element",
+            },
+          ],
+          "end": 126,
+          "start": 118,
+          "tag": "p",
+          "type": "element",
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "end": 163,
+                  "start": 130,
+                  "text": "Blockquotes can also be nested...",
+                  "type": "text",
+                },
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "end": 236,
+                          "start": 167,
+                          "text": "...by using additional greater-than signs right next to each other...",
+                          "type": "text",
+                        },
+                      ],
+                      "end": 236,
+                      "start": 164,
+                      "tag": "div",
+                      "type": "element",
+                    },
+                  ],
+                  "end": 236,
+                  "start": 164,
+                  "tag": "blockquote",
+                  "type": "element",
+                },
+              ],
+              "end": 163,
+              "start": 128,
+              "tag": "div",
+              "type": "element",
+            },
+            {
+              "children": [
+                {
+                  "end": 276,
+                  "start": 239,
+                  "text": "> > ...or with spaces between arrows.",
+                  "type": "text",
+                },
+              ],
+              "end": 276,
+              "start": 237,
+              "tag": "div",
+              "type": "element",
+            },
+          ],
+          "end": 276,
+          "rule": "list",
+          "start": 128,
+          "tag": "blockquote",
+          "type": "element",
+        },
+      ]
+    `)
+  })
+
   describe('codeblock', () => {
     test('simple', () => {
       const script = `

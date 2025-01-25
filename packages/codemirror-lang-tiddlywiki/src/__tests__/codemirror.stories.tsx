@@ -1,5 +1,5 @@
 import CodeMirror from '@uiw/react-codemirror'
-import './__tests__/trim-margin'
+import './trim-margin'
 
 const text = `
 |! H1
