@@ -1,6 +1,7 @@
 {
   "extends": "@repo/tsconfig",
   "compilerOptions": {
+    "jsx": "react",
     "baseUrl": "./",
     "rootDir": "./src",
     "outDir": "./dist",

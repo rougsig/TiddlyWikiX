@@ -1,5 +1,5 @@
 {
-  "name": "@rougsig/codemirror-lang-tiddlyscript",
+  "name": "@rougsig/codemirror-lang-tiddlywiki",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -38,7 +38,5 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "check-types": "tsc --noEmit"
-  },
-  "dependencies": {
   }
 }
